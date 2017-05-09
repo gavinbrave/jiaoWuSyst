@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="roleBean">
+	<resultMap class="roleBean" id="roleBeanMap">
+		<result property="roleId" column="id"/>
+		<result property="roleName" column="name"/>
+	</resultMap>
+	
+	<!-- 根据id查询 -->
+	<select id="findById" parameterClass="int" resultMap="roleBeanMap">
+		SELECT * FROM t_role WHERE id=#id#;
+	</select>
+	
+</sqlMap>

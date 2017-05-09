@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="teacherBean">
+	<resultMap class="teacherBean" id="teacherBeanMap">
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="pwd" column="pwd"/>
+		<result property="birthday" column="birthday"/>
+		<result property="startTime" column="startTime"/>
+		<result property="age" column="age"/>
+		<result property="seniority" column="Seniority"/>
+		<result property="archiveFile" column="archiveFile"/>
+		<result property="sex" column="sex"/>
+		<result property="email" column="email"/>
+	</resultMap>
+	<resultMap class="teacherBean" id="teacherBeanIncludeSubjectAndRole" extends="teacherBeanMap">
+		<result property="role" column="roleId" select="roleBean.findById"/>
+		<result property="subjectBean" column="subjectId" select="subjectBean.findById"/>
+	</resultMap>
+	<sql id="jnSql">
+		<isNotEmpty property="subjectName">
+			and subjectId = (select id from t_subject where name like '%$subjectName$%') 
+		</isNotEmpty>
+		<isNotEmpty property="name">
+			and name like '%$name$%'
+		</isNotEmpty>
+		<isNotNull property="startTime">
+			<![CDATA[
+				and startTime >='$startTime$'
+			]]>
+		</isNotNull>
+		<isNotNull property="endTime">
+			<![CDATA[
+				and startTime <='$endTime$'
+			]]>
+		</isNotNull>
+	</sql>
+	<!-- 根据id查询 -->
+	<select id="findById" parameterClass="int" resultMap="teacherBeanIncludeSubjectAndRole">
+		SELECT * FROM t_teacher WHERE state >0 and id=#id#;
+	</select>
+	
+	<update id="updateByPwd">
+		UPDATE t_teacher SET pwd=#pwd#  where id=#id#;
+	</update>
+	<select id="login" resultMap="teacherBeanIncludeSubjectAndRole">
+		select * from t_teacher where state >0 and name=#name# and pwd=#pwd#;
+	</select>
+	<!-- 分页模糊查询 -->
+	<select id="findByItem" resultMap="teacherBeanIncludeSubjectAndRole">
+		select * from t_teacher where 1=1 and state >0
+		<include refid="jnSql"/>
+		limit #start#,#size#;
+	</select>
+	<select id="findByCount" resultClass="int">
+		select count(*) from t_teacher where 1=1 and state >0
+		<include refid="jnSql"/>
+	</select>
+	<update id="updateState" >
+		UPDATE t_teacher SET state = 0  where id=#id#;
+	</update>
+	<insert id="add" >
+		INSERT INTO t_teacher(name,pwd,subjectId,birthday,startTime,age,Seniority,archiveFile,sex,roleId,email,state) 
+		VALUES (#bean.name#,#bean.pwd#,#bean.subjectBean.subjectId#,#bean.birthday#,#bean.startTime#,#bean.age#,#bean.seniority#,
+		#bean.archiveFile#,#bean.sex#,#bean.role.roleId#,#bean.email#,1);
+		<selectKey resultClass="int">
+			select max(id) from t_teacher;
+		</selectKey>
+	</insert>
+</sqlMap>

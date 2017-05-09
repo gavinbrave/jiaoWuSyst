@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+<!-- 允许使用命名空间 -->
+	<settings useStatementNamespaces="true"/>
+	<!-- 给类取别名 -->
+	<!-- 权限实例bean -->
+	<typeAlias alias="roleBean" type="com.lovo.bean.RoleBean"/>
+	<!-- 学科实例bean -->
+	<typeAlias alias="subjectBean" type="com.lovo.bean.SubjectBean"/>
+	<!-- 教师实例bean -->
+	<typeAlias alias="teacherBean" type="com.lovo.bean.TeacherBean"/>
+	<!-- 教师实例bean -->
+	<typeAlias alias="announcement" type="com.lovo.bean.AnnouncementBean"/>
+	<!-- 日志实例bean -->
+	<typeAlias alias="LogBean" type="com.lovo.bean.LogBean"/>
+	<sqlMap resource="orm/base.xml"/>
+</sqlMapConfig>

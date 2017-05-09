@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="LogBean">
+	<resultMap class="LogBean" id="logBeanMap">
+		<result property="id" column="id"/>
+		<result property="errorTime" column="errorTime"/>
+		<result property="content" column="content"/>
+		<result property="name" column="errorName"/>
+	</resultMap>
+	<sql id="logBeanSql">
+		<isNotNull property="startTime">
+			<![CDATA[
+				and #startTime#<=errorTime
+			]]>
+		</isNotNull>
+		<isNotNull property="endTime">
+			<![CDATA[
+				and errorTime<=#endTime#
+			]]>
+		</isNotNull>
+	</sql>
+	<select id="findByItem" resultMap="logBeanMap">
+		select * from t_log where 1=1
+		<include refid="logBeanSql"/>
+		limit #start#,#size#;
+	</select>
+	
+	<select id="findByCount" resultClass="int">
+		select count(*) from t_log where 1=1
+		<include refid="logBeanSql"/>
+	</select>
+</sqlMap>
