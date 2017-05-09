@@ -42,7 +42,7 @@ public class AnnouncementAction {
 	
 	
 	@RequestMapping("add")
-	public String add( AnnouncementBean bean,MultipartFile imgFile,HttpServletRequest request)throws Exception{
+	public String add( AnnouncementBean bean,HttpServletRequest request)throws Exception{
 		
 		bean.setCreateTime(new Date(System.currentTimeMillis()));
 		announcementService.add(bean);
